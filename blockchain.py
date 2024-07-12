@@ -58,6 +58,24 @@ class Blockchain(object):
         self.current_transactions.append(transaction)
         return self.last_block.index + 1
 
+    def prof_of_work(self, last_proof: int) -> int:
+        """
+        Simple Proof of Work Algorithm
+
+        Args:
+            last_proof (int): the value of last proof
+
+        Returns:
+            proof (int)
+        """
+
+        proof = 0
+
+        while self.valid_proof(last_proof=last_proof, current_proof=proof) is False:
+            proof += 1
+
+        return proof
+
     @staticmethod
     def hash(block: Block) -> str:
         """
@@ -71,6 +89,22 @@ class Blockchain(object):
         """
         block_string = json.dumps(block.__dict__, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
+
+    @staticmethod
+    def valid_proof(last_proof :int, current_proof: int) -> bool:
+        """ Validates the Proof
+
+        Args:
+            last_proof (int): Previous Proof
+            current_proof (int): Current Proof
+
+        Returns:
+            bool: the rusult of validation
+        """
+
+        guess = f'{last_proof}{current_proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
 
     @property
     def last_block(self) -> Block:
