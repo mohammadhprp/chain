@@ -41,7 +41,7 @@ class Blockchain(object):
         )
 
         # Reset the current list of transactions
-        self.current_transactions.clear()
+        self.current_transactions = []
 
         # Append the block to the chain
         self.chain.append(block)
@@ -61,7 +61,7 @@ class Blockchain(object):
         self.current_transactions.append(transaction)
         return self.last_block.index + 1
 
-    def prof_of_work(self, last_proof: int) -> int:
+    def proof_of_work(self, last_proof: int) -> int:
         """
         Simple Proof of Work Algorithm
 
@@ -90,7 +90,7 @@ class Blockchain(object):
         Returns:
             str: The hash of the block.
         """
-        block_string = json.dumps(block.__dict__, sort_keys=True).encode()
+        block_string = json.dumps(block.to_dict(), sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
 
     @staticmethod
